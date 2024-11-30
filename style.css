@@ -83,10 +83,10 @@
   
   .falling-item {
     position: absolute;
-    width: 30px;
-    height: 30px;
-    background: yellow;
-    border-radius: 50%;
+    width: auto; /* 保持宽高比例 */
+    height: 50px; /* 根据需要调整道具的高度 */
+    object-fit: contain; /* 确保图片按比例缩放 */
+    pointer-events: none; /* 避免鼠标事件干扰 */
   }
   
   #score {
