@@ -11,15 +11,7 @@ const lanes = [window.innerWidth / 6, window.innerWidth / 2, (5 * window.innerWi
 let fallingItems = [];
 let gameInterval;
 let itemInterval;
-let lastTouchTime = 0;
 
-document.addEventListener('touchstart', (e) => {
-  const currentTime = new Date().getTime();
-  if (currentTime - lastTouchTime < 300) {
-    e.preventDefault();
-  }
-  lastTouchTime = currentTime;
-}, { passive: false });
 // 更新玩家位置
 function updatePlayerPosition() {
   player.style.left = `${lanes[currentLane] - player.offsetWidth / 2}px`;
