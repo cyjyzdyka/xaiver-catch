@@ -2,23 +2,27 @@
 const gameContainer = document.getElementById('game-container');
 const player = document.getElementById('player');
 const scoreDisplay = document.getElementById('score');
+const leftButton = document.getElementById('left-button');
+const rightButton = document.getElementById('right-button');
 
 let score = 0;
-let playerX = window.innerWidth / 2;
+let currentLane = 1; // 0: 左, 1: 中, 2: 右
+const lanes = [window.innerWidth / 6, window.innerWidth / 2, (5 * window.innerWidth) / 6];
 let fallingItems = [];
 let gameInterval;
 let itemInterval;
 
 // 更新玩家位置
 function updatePlayerPosition() {
-  player.style.left = `${playerX}px`;
+  player.style.left = `${lanes[currentLane] - player.offsetWidth / 2}px`;
 }
 
-// 生成随机掉落道具
+// 生成掉落道具
 function createFallingItem() {
   const item = document.createElement('div');
   item.classList.add('falling-item');
-  item.style.left = `${Math.random() * window.innerWidth}px`;
+  const laneIndex = Math.floor(Math.random() * 3); // 随机选择路径
+  item.style.left = `${lanes[laneIndex] - 15}px`;
   item.style.top = '0px';
   gameContainer.appendChild(item);
   fallingItems.push(item);
@@ -29,6 +33,8 @@ function updateFallingItems() {
   fallingItems.forEach((item, index) => {
     const itemRect = item.getBoundingClientRect();
     const playerRect = player.getBoundingClientRect();
+
+    // 道具下落
     item.style.top = `${itemRect.top + 5}px`;
 
     // 检测碰撞
@@ -43,7 +49,7 @@ function updateFallingItems() {
       scoreDisplay.textContent = `Score: ${score}`;
     }
 
-    // 移除出屏幕的道具
+    // 检测是否到达底部
     if (itemRect.top > window.innerHeight) {
       gameContainer.removeChild(item);
       fallingItems.splice(index, 1);
@@ -51,18 +57,16 @@ function updateFallingItems() {
   });
 }
 
-// 控制角色移动
-function handleTouchMove(event) {
-  playerX = event.touches[0].clientX;
+// 按钮控制
+leftButton.addEventListener('click', () => {
+  currentLane = Math.max(0, currentLane - 1); // 左移一栏
   updatePlayerPosition();
-}
+});
 
-function handleKeyDown(event) {
-  if (event.key === 'ArrowLeft') playerX -= 20;
-  if (event.key === 'ArrowRight') playerX += 20;
-  playerX = Math.max(0, Math.min(playerX, window.innerWidth - 50)); // 边界控制
+rightButton.addEventListener('click', () => {
+  currentLane = Math.min(2, currentLane + 1); // 右移一栏
   updatePlayerPosition();
-}
+});
 
 // 初始化游戏
 function startGame() {
@@ -71,15 +75,4 @@ function startGame() {
   itemInterval = setInterval(createFallingItem, 1000);
 }
 
-function stopGame() {
-  clearInterval(gameInterval);
-  clearInterval(itemInterval);
-  alert(`Game Over! Final Score: ${score}`);
-}
-
-// 绑定事件
-window.addEventListener('touchmove', handleTouchMove);
-window.addEventListener('keydown', handleKeyDown);
-
-// 开始游戏
 startGame();
