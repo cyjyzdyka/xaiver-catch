@@ -11,7 +11,27 @@ const lanes = [window.innerWidth / 6, window.innerWidth / 2, (5 * window.innerWi
 let fallingItems = [];
 let gameInterval;
 let itemInterval;
+const cloudsContainer = document.getElementById('clouds');
 
+function createCloud(top, width, height, duration) {
+  const cloud = document.createElement('div');
+  cloud.classList.add('cloud');
+  cloud.style.top = `${top}px`;
+  cloud.style.width = `${width}px`;
+  cloud.style.height = `${height}px`;
+  cloud.style.animationDuration = `${duration}s`;
+  cloudsContainer.appendChild(cloud);
+}
+
+// 动态生成多层次云朵
+for (let i = 0; i < 5; i++) {
+  createCloud(
+    Math.random() * window.innerHeight, // 随机高度
+    100 + Math.random() * 100, // 随机宽度
+    60 + Math.random() * 50, // 随机高度
+    20 + Math.random() * 10 // 随机动画时长
+  );
+}
 // 更新玩家位置
 function updatePlayerPosition() {
   player.style.left = `${lanes[currentLane] - player.offsetWidth / 2}px`;
@@ -30,32 +50,47 @@ function createFallingItem() {
 
 // 更新道具位置
 function updateFallingItems() {
-  fallingItems.forEach((item, index) => {
-    const itemRect = item.getBoundingClientRect();
-    const playerRect = player.getBoundingClientRect();
-
-    // 道具下落
-    item.style.top = `${itemRect.top + 5}px`;
-
-    // 检测碰撞
-    if (
-      itemRect.bottom >= playerRect.top &&
-      itemRect.left < playerRect.right &&
-      itemRect.right > playerRect.left
-    ) {
-      gameContainer.removeChild(item);
-      fallingItems.splice(index, 1);
-      score++;
-      scoreDisplay.textContent = `Score: ${score}`;
-    }
-
-    // 检测是否到达底部
-    if (itemRect.top > window.innerHeight) {
-      gameContainer.removeChild(item);
-      fallingItems.splice(index, 1);
-    }
-  });
-}
+    fallingItems.forEach((item, index) => {
+      const itemRect = item.getBoundingClientRect();
+      const playerRect = player.getBoundingClientRect();
+  
+      // 道具下落
+      item.style.top = `${itemRect.top + 5}px`;
+  
+      // 检测碰撞
+      if (
+        itemRect.bottom >= playerRect.top &&
+        itemRect.left < playerRect.right &&
+        itemRect.right > playerRect.left
+      ) {
+        // 碰撞时改变图片
+        player.src = './images/active.png'; // 替换为得分图片
+  
+        // 恢复原始图片
+        setTimeout(() => {
+          player.src = './images/player.png'; // 替换为原始图片
+        }, 300); // 300ms 后恢复原始图片
+  
+        // 删除道具
+        if (gameContainer.contains(item)) {
+          gameContainer.removeChild(item);
+        }
+        fallingItems.splice(index, 1);
+  
+        // 更新分数
+        score++;
+        scoreDisplay.textContent = `Score: ${score}`;
+      }
+  
+      // 检测是否到达底部
+      if (itemRect.top > window.innerHeight) {
+        if (gameContainer.contains(item)) {
+          gameContainer.removeChild(item);
+        }
+        fallingItems.splice(index, 1);
+      }
+    });
+  }
 
 // 按钮控制
 leftButton.addEventListener('click', () => {
