@@ -36,17 +36,29 @@ for (let i = 0; i < 5; i++) {
 function updatePlayerPosition() {
   player.style.left = `${lanes[currentLane] - player.offsetWidth / 2}px`;
 }
-
-// 生成掉落道具
-function createFallingItem() {
-  const item = document.createElement('div');
-  item.classList.add('falling-item');
-  const laneIndex = Math.floor(Math.random() * 3); // 随机选择路径
-  item.style.left = `${lanes[laneIndex] - 15}px`;
-  item.style.top = '0px';
-  gameContainer.appendChild(item);
-  fallingItems.push(item);
-}
+const itemImages = [
+    './images/donut.png',
+    './images/hamburger.png',
+    './images/pizza.png',
+    './images/hot-pot.png',
+    './images/biryani.png',
+    './images/french-fries.png'
+    // 添加更多图片路径
+  ];
+  
+  function createFallingItem() {
+    const item = document.createElement('img'); // 创建 img 元素
+    item.classList.add('falling-item');
+    const randomIndex = Math.floor(Math.random() * itemImages.length);
+    item.src = itemImages[randomIndex]; // 随机选择图片
+  
+    const laneIndex = Math.floor(Math.random() * 3); // 随机选择路径
+    item.style.left = `${lanes[laneIndex] - 25}px`; // 假设图片宽度为 50px，调整以居中
+    item.style.top = '0px';
+  
+    gameContainer.appendChild(item);
+    fallingItems.push(item);
+  }
 
 // 更新道具位置
 function updateFallingItems() {
