@@ -1,24 +1,83 @@
 /* styles.css */
-body {
+  body {
     margin: 0;
     overflow: hidden;
     font-family: Arial, sans-serif;
   }
-  
+  body {
+    background: linear-gradient(to bottom, #87CEEB, #FFFFFF);
+  }
   #game-container {
     position: relative;
     width: 100%;
     height: 100vh;
-    background: #87CEEB; /* 天空蓝色 */
+    
     overflow: hidden;
+  }
+
+/* 云朵容器 */
+#clouds {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  
+ /* 小型不规则云朵 */
+.cloud {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow:
+    -10px 5px 15px rgba(255, 255, 255, 0.8),
+    10px 8px 10px rgba(255, 255, 255, 0.7),
+    -15px -5px 20px rgba(255, 255, 255, 0.6),
+    5px -5px 15px rgba(255, 255, 255, 0.5),
+    0px 10px 25px rgba(255, 255, 255, 0.7),
+    -5px -10px 20px rgba(255, 255, 255, 0.6);
+    animation: moveClouds 20s linear infinite; /* 动画 */
+    opacity: 0.7;
+  }
+  
+  .cloud::before,
+  .cloud::after {
+    content: '';
+    position: absolute;
+    background: inherit;
+    box-shadow: inherit;
+    border-radius: inherit;
+  }
+  
+  .cloud::before {
+    width: 60%;
+    height: 60%;
+    top: -20px;
+    left: 20px;
+  }
+  
+  .cloud::after {
+    width: 40%;
+    height: 40%;
+    bottom: 10px;
+    right: 30px;
+  }
+  
+  /* 动画 */
+  @keyframes moveClouds {
+    0% {
+      transform: translateX(-200px); /* 从屏幕左侧开始 */
+    }
+    100% {
+      transform: translateX(100vw); /* 飘到屏幕右侧 */
+    }
   }
   
   #player {
     position: absolute;
     bottom: 15vh;
-    width: 50px;
-    height: 50px;
-    background: red;
+    width: 80px;
+    height: 80px;
+    background: transparent;
     border-radius: 50%;
   }
   
