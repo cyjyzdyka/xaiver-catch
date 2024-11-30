@@ -1,4 +1,9 @@
 /* styles.css */
+html, body {
+  touch-action: manipulation; /* 禁用双击缩放 */
+  
+  padding: 0;
+}
 body {
     margin: 0;
     overflow: hidden;
